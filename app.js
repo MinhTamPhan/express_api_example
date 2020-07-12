@@ -5,6 +5,8 @@ require('express-async-errors')
 
 const app = express()
 
+
+// middleware verify access token
 const verifyAccessToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
   if (token) {
@@ -19,14 +21,14 @@ const verifyAccessToken = (req, res, next) => {
   }
 }
 
-app.use('/api/cal', /*verifyAccessToken,*/ require('./routes/calculator.route'))
+app.use('/api/translate', /*verifyAccessToken,*/ require('./routes/translate.route'))
 
 
 app.use((req, res, next) => {
   throw createError(404, 'Resource not found.')
 })
 
-// globle exeption handle, must be end of app.use
+// global exeption handle, must be end of app.use
 app.use((err, req, res, next) => {
   if (typeof err.status === 'undefined' || err.status === 500) {
     console.error(err.stack);
