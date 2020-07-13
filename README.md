@@ -102,3 +102,23 @@ trong đó trường `msg` cho biết message lỗi tương ứng với error co
 trường `item` chính là record mới được xóa từ db.
 
 ### `/api/calculator`
+phương thức `post` cần truyền thêm body dùng để thêm từ cần dịch vào dictionary. vd:
+
+![hình 2](./imgs/calpost.png)
+
+request này sẽ resqonse như sau:
+```javascript
+{
+    "msg": "sucessfully",
+    "valid": true,
+    "err": 0
+}
+```
+trong đó trường `err` bằng `0` tức không có lỗi. ngoài ra có các loại lỗi sau:
+```javascript
+const success = 0
+const failure = -1 // nếu chuỗi ISBN không hợp lệ
+const invalidParams = -2 // nếu không có 2 params digits hoặc length != 11
+```
+trong đó trường `msg` cho biết message lỗi tương ứng với error code
+trường `valid` cho biết chuỗi `ISBN` hợp lệ hay không.

@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
       if (checksumDigits(digits, checksum)) {
         respone.msg = 'sucessfully'
         respone.valid = true
-        respone.err = 0
+        respone.err = success
       } else {
         respone.msg = 'invalid ISBN'
         respone.valid = false
