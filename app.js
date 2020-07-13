@@ -47,3 +47,5 @@ app.use((err, req, res, next) => {
 app.listen(process.env.EXPOSE_PORT, () => {
   console.log(`API running on PORT ${process.env.EXPOSE_PORT}`)
 })
+
+module.exports = app
