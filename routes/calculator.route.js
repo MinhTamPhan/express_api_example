@@ -32,7 +32,7 @@ const checksumDigits = (digits, checksum) =>  caculatorModular(digits) === check
 router.post('/', async (req, res) => {
   const digitString = req.body.digits ? `${req.body.digits}`: null
   let respone = {}
-  if (digitString.length > 11) {
+  if (digitString.length == 11) {
     if (regExp.test(digitString)) {
       const { digits, checksum } = recontructISBN(digitString)
       if (checksumDigits(digits, checksum)) {
@@ -55,4 +55,4 @@ router.post('/', async (req, res) => {
   res.status(200).json(respone)
 })
 
-module.exports = router;
+module.exports = router

@@ -26,9 +26,9 @@ app.use('/api/translate', /*verifyAccessToken,*/ require('./routes/translate.rou
 
 app.use('/api/calculator', /*verifyAccessToken,*/ require('./routes/calculator.route'))
 
-app.use('/', (req, res)=>{
-  res.status(200).json({msg: "hello from api"})
-})
+// app.use('/', (req, res)=>{
+//   res.status(200).json({msg: "hello from api"})
+// })
 
 app.use((req, res, next) => {
   throw createError(404, 'Resource not found.')
@@ -37,8 +37,8 @@ app.use((req, res, next) => {
 // global exeption handle, must be end of app.use
 app.use((err, req, res, next) => {
   if (typeof err.status === 'undefined' || err.status === 500) {
-    console.error(err.stack);
-    res.status(500).send('View error log on console.')
+    console.error(err.stack)
+    res.status(500).send('internal server error')
   } else {
     res.status(err.status).send(err)
   }

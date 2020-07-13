@@ -3,7 +3,7 @@ const app = require('../app.js'),
 const assert = require('assert')
 
 describe('### GET /api/translate?word=i', () => {
-  it('should return error code -1', (done) => {
+  it('get word not exist in dictionary, should return error code -1', (done) => {
     request(app)
     .get('/api/translate?word=i')
     .expect(200)
@@ -29,6 +29,20 @@ describe('### POST /api/translate', () => {
   })
 })
 
+describe('### GET /api/translate?word=i', () => {
+  it('get word exist in dictionary, should return error code 0', (done) => {
+    request(app)
+    .get('/api/translate?word=i')
+    .expect(200)
+    .end((err, res) => { 
+      if (err) return done(err)
+      assert.equal(res.body.err, 0)
+      assert.equal(res.body.item.mean, 'tôi')
+      done()
+    })
+  })
+})
+
 describe('### PATCH /api/translate', () => {
   it('update pair word-mean in dictionary,the word existing in dictionary, should return error code 0', (done) => {
     request(app)
@@ -43,6 +57,20 @@ describe('### PATCH /api/translate', () => {
   })
 })
 
+describe('### GET /api/translate?word=i', () => {
+  it('get word after patch request, should return error code 0', (done) => {
+    request(app)
+    .get('/api/translate?word=i')
+    .expect(200)
+    .end((err, res) => { 
+      if (err) return done(err)
+      assert.equal(res.body.err, 0)
+      assert.equal(res.body.item.mean, 'tôi v2')
+      done()
+    })
+  })
+})
+
 describe('### Delete /api/translate', () => {
   it('delete pair word-mean in dictionary,the word existing in dictionary, should return error code 0', (done) => {
     request(app)
@@ -52,6 +80,19 @@ describe('### Delete /api/translate', () => {
     .end((err, res) => {
       if (err) return done(err)
       assert.equal(res.body.err, 0)
+      done()
+    })
+  })
+})
+
+describe('### GET /api/translate?word=i', () => {
+  it('get word after Delete request, should return error code -1', (done) => {
+    request(app)
+    .get('/api/translate?word=i')
+    .expect(200)
+    .end((err, res) => { 
+      if (err) return done(err)
+      assert.equal(res.body.err, -1)
       done()
     })
   })
