@@ -1,24 +1,4 @@
-// const axios = require('axios')
-// const { response } = require('express')
-
-// const fetchFrom = async (url = '', method = 'POST', data = {}, accessToken = '') => {
-//   const response = await axios({
-//     headers: {
-//       'x-access-token': accessToken
-//     },
-//     method,
-//     url: url,
-//     data: data
-//   })
-//   return response.data
-// }
-// const main = async() => {
-//   let res =  await fetchFrom('http://localhost:5500/api/translate', 'GET')
-//   asert res.err 
-// }
-// main()
 const app = require('../app.js'),
-      chai = require('chai'),
       request = require('supertest')
 const assert = require('assert')
 
@@ -27,36 +7,78 @@ describe('### GET /api/translate?word=i', () => {
     request(app)
     .get('/api/translate?word=i')
     .expect(200)
-    .end((err, res) => {
-      assert.equal(res.body.err, -1)
+    .end((err, res) => { 
       if (err) return done(err)
+      assert.equal(res.body.err, -1)
       done()
     })
   })
 })
 
 describe('### POST /api/translate', () => {
-  it('should return error code -1', (done) => {
+  it('create pair word-mean in dictionary, should return error code 0', (done) => {
     request(app)
     .post('/api/translate')
     .send({word:'i', mean: 'tôi'})
     .expect(200)
     .end((err, res) => {
-      assert.equal(res.body.err, 0)
       if (err) return done(err)
+      assert.equal(res.body.err, 0)
       done()
     })
   })
 })
 
-describe('Test curl translator', () => {
+describe('### PATCH /api/translate', () => {
+  it('update pair word-mean in dictionary,the word existing in dictionary, should return error code 0', (done) => {
+    request(app)
+    .patch('/api/translate')
+    .send({word:'i', mean: 'tôi v2'})
+    .expect(200)
+    .end((err, res) => {
+      if (err) return done(err)
+      assert.equal(res.body.err, 0)
+      done()
+    })
+  })
+})
+
+describe('### Delete /api/translate', () => {
+  it('delete pair word-mean in dictionary,the word existing in dictionary, should return error code 0', (done) => {
+    request(app)
+    .delete('/api/translate')
+    .send({word:'i'})
+    .expect(200)
+    .end((err, res) => {
+      if (err) return done(err)
+      assert.equal(res.body.err, 0)
+      done()
+    })
+  })
+})
+
+describe('### Delete /api/translate', () => {
+  it('delete pair word-mean in dictionary,the word not existing in dictionary, should return error code -1', (done) => {
+    request(app)
+    .delete('/api/translate')
+    .send({word:'i'})
+    .expect(200)
+    .end((err, res) => {
+      if (err) return done(err)
+      assert.equal(res.body.err, -1)
+      done()
+    })
+  })
+})
+
+describe('### GET /api/translate not passing params', () => {
   it('should return error code -2', (done) => {
     request(app)
     .get('/api/translate')
     .expect(200)
     .end((err, res) => {
-      assert.equal(res.body.err, -2)
       if (err) return done(err)
+      assert.equal(res.body.err, -2)
       done()
     })
   })
