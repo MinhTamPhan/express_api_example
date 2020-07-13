@@ -4,6 +4,7 @@ require('dotenv').config()
 require('express-async-errors')
 
 const app = express()
+app.use(express.json()) // body parser
 
 
 // middleware verify access token
@@ -21,8 +22,13 @@ const verifyAccessToken = (req, res, next) => {
   }
 }
 
+
+
 app.use('/api/translate', /*verifyAccessToken,*/ require('./routes/translate.route'))
 
+app.use('/', (req, res)=>{
+  res.status(200).json({msg: "hello from api"})
+})
 
 app.use((req, res, next) => {
   throw createError(404, 'Resource not found.')
