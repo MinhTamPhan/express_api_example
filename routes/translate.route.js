@@ -117,7 +117,7 @@ router.patch('/', (req, res) => {
       respone.err = success
     } else {
       respone.msg='the word not exists'
-      respone.err=failure
+      respone.err=invalidParams
     }
   }
   else {
