@@ -32,10 +32,15 @@ router.post('/', async (req, res) => {
   const mean = req.body.mean ? req.body.mean.toLowerCase(): null
   let respone = {}
   if(word && mean) {
-    
-    db.set(word, mean)
+    try {
+      db.set(word, mean)
       .write()
-      
+    } catch (error) {
+      respone.msg='failed to persistent this time'
+      respone.err=failure
+      res.status(200).json(respone)
+      return
+    }
     const item = {}
     item[word] = mean
     respone.msg='sucessfully'
@@ -49,8 +54,40 @@ router.post('/', async (req, res) => {
 })
 
 router.delete('/', (req, res) => {
+  const word = req.body.word ? req.body.word.toLowerCase(): null
+  let respone = {}
+  if(word) {
+    const mean = db.get(word).value()
+    if(mean) {
+      try {
+        db.unset(word).write()
+      } catch (error) {
+        respone.msg='failed to persistent this time'
+        respone.err=failure
+        res.status(200).json(respone)
+        return
+      }
+    } else {
+      respone.msg='the word not exists'
+      respone.err=failure
+    }
+  } else {
+    respone.msg='invalid params'
+    respone.err=invalidParams
+  }
+  res.status(200).json(respone)
 })
 
-router.patch('/', (req, res) => {})
+router.patch('/', (req, res) => {
 
-module.exports = router;
+  const word = req.body.word ? req.body.word.toLowerCase(): null
+  let respone = {}
+  if(word) {
+  }
+  else {
+    respone.msg='invalid params'
+    respone.err=invalidParams
+  }
+})
+
+module.exports = router
