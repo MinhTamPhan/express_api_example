@@ -28,7 +28,7 @@ const recontructISBN = (digits) => {
 const checksumDigits = (digits, checksum) =>  caculatorModular(digits) === checksum
 
 
-// create receiver_info
+// check valid isbn
 router.post('/', async (req, res) => {
   const digitString = req.body.digits ? `${req.body.digits}`: null
   let respone = {}
