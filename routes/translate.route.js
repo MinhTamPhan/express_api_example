@@ -37,7 +37,6 @@ router.get('/', async (req, res) => {
   res.status(200).json(respone)
 })
 
-
 // create word-mean in dictionary
 router.post('/', async (req, res) => {
   const word = req.body.word ? req.body.word.toLowerCase(): null
@@ -97,10 +96,8 @@ router.delete('/', (req, res) => {
 })
 
 router.patch('/', (req, res) => {
-
   const word = req.body.word ? req.body.word.toLowerCase(): null
   const mean = req.body.mean ? req.body.mean.toLowerCase(): null
-  console.log(word, mean)
   let respone = {}
   if(word && mean) {
     const oldMean = db.get(word).value()

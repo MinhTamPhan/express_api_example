@@ -22,9 +22,9 @@ const verifyAccessToken = (req, res, next) => {
   }
 }
 
-
-
 app.use('/api/translate', /*verifyAccessToken,*/ require('./routes/translate.route'))
+
+app.use('/api/calculator', /*verifyAccessToken,*/ require('./routes/calculator.route'))
 
 app.use('/', (req, res)=>{
   res.status(200).json({msg: "hello from api"})

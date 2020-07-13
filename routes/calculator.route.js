@@ -1,5 +1,12 @@
 const router = require('express').Router()
 
+// business error code, negative separate with http status code
+const success = 0
+const failure = -1
+const invalidParams = -2
+
+const regExp = new RegExp("^\\d+$");
+
 const caculatorModular = digits => {
   sum = 0
   for (let i = 0; i < digits.length; i++)
@@ -9,10 +16,10 @@ const caculatorModular = digits => {
 
 const recontructISBN = (digits) => {
   const digitLenth = digits.length - 1
-  const checksum = null
+  let checksum = null
   const restoreDitgits = new Array()
-  for (let i = 0; i < lut.length; i++) {
-    if (lut[i] < digitLenth) restoreDitgits.push(parseInt(digits[i]))
+  for (let i = 0; i < digits.length; i++) {
+    if (i < digitLenth) restoreDitgits.push(parseInt(digits[i]))
     else checksum = parseInt(digits[i])
   }
   return { digits: restoreDitgits, checksum }
@@ -20,36 +27,32 @@ const recontructISBN = (digits) => {
 
 const checksumDigits = (digits, checksum) =>  caculatorModular(digits) === checksum
 
-const verifyDigits = (digitString) => {
-  digitString = `${digitString}`
-  if (digitString.length > 11 || digitString.length < 10) throw new Error('digits length must be equal 11 or 10')
-  const { digits, checksum } = recontructISBN(digitString)
-  // console.log('digits, checksum', digits, checksum)
-  return checksumDigits(digits, checksum)
-}
 
 // create receiver_info
-router.get('/', async (req, res) => {
-  const isValid = true;//validateReceiverData(req.body);
-  let errorCode = 400;
-  let ret = {
-    msg: 'invalid parameters',
-  };
-  if (isValid) {
-    let user = userModel.singleByAccountNum(req.body.accountNum);
-    let entity = {
-      owner_id: req.body.id,
-      account_id: user.id,
-      alias_name: req.body.aliasName
-    };
-    let newReceiver = await receiverModel.add(entity);
-    errorCode = 200;
-    ret = {
-      msg: 'successfully',
-      newReceiver: entity
+router.post('/', async (req, res) => {
+  const digitString = req.body.digits ? `${req.body.digits}`: null
+  let respone = {}
+  if (digitString.length > 11) {
+    if (regExp.test(digitString)) {
+      const { digits, checksum } = recontructISBN(digitString)
+      if (checksumDigits(digits, checksum)) {
+        respone.msg = 'sucessfully'
+        respone.valid = true
+        respone.err = 0
+      } else {
+        respone.msg = 'invalid ISBN'
+        respone.valid = false
+        respone.err = failure
+      }
+    } else {
+      respone.msg = 'digits require is number'
+      respone.err = invalidParams
     }
+  } else {
+    respone.msg = 'body require feild digits'
+    respone.err = invalidParams
   }
-  await res.status(errorCode).json(ret)
+  res.status(200).json(respone)
 })
 
 module.exports = router;
